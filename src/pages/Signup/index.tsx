@@ -258,7 +258,7 @@ export function Signup() {
                 const validationErrors = validate(formData)
                 setErrors(validationErrors)
                 if (validationErrors.length === 0 && checked) {
-                  const data = {
+                  const dataToSend = {
                     nome: formData.name,
                     cpf: formData.cpf,
                     sexo: formData.gender === 'M' ?? false,
@@ -273,9 +273,12 @@ export function Signup() {
                     senha: formData.password,
                   }
                   try {
-                    await api.post('cliente', data, {
+                    const response = await api(`cliente`, {
+                      method: 'POST',
+                      data: { ...dataToSend, sexo: dataToSend.sexo ? 1 : 0 },
                       headers: { 'Content-Type': 'application/json' },
                     })
+                    console.log(response)
                   } catch (e) {
                     console.log(e)
                   }

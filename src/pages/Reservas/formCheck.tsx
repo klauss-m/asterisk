@@ -27,6 +27,8 @@ export interface ReservaCheck {
     id?: number
     numero?: number
     valor?: number
+    descricao?: string
+    status?: string
   }
 }
 

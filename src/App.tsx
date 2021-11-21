@@ -11,14 +11,9 @@ import { Reservas } from './pages/Reservas'
 import { Funcionarios } from './pages/Funcionarios'
 import { Financeiro } from './pages/Financeiro'
 import { useLogin } from './hooks/useLogin'
-import { useEffect } from 'react'
 
 function App() {
   const { user } = useLogin()
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
 
   return (
     <>

@@ -14,7 +14,6 @@ import {
   MenuItem,
   Dialog,
 } from '@mui/material'
-import { useHistory } from 'react-router-dom'
 import { ValidationInput } from './ValidationInput'
 import { FormData, useInputs } from '../../hooks/useInputs'
 import { useValidate } from '../../hooks/useValidate'
@@ -45,8 +44,6 @@ export function FormCliente({ openPopup, onClose, data, editId, setUpdated }: Di
     'number',
     'complement',
   ])
-
-  const history = useHistory()
 
   useEffect(() => {
     if (data) {
@@ -252,7 +249,7 @@ export function FormCliente({ openPopup, onClose, data, editId, setUpdated }: Di
                           estado: formData.state,
                           endereco: tempAddress.join(' - '),
                           cep: formData.zip,
-                          senha: formData.cpf,
+                          senha: data ? data.password : formData.cpf,
                         }
                         try {
                           const send = !data ? '' : `/${editId}`
@@ -280,7 +277,6 @@ export function FormCliente({ openPopup, onClose, data, editId, setUpdated }: Di
                 <Grid item>
                   <Button
                     onClick={() => {
-                      //setUpdated()
                       onClose()
                     }}
                     type='button'

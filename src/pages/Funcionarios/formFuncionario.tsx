@@ -13,6 +13,7 @@ import {
   MenuItem,
   Dialog,
 } from '@mui/material'
+import { DateTime } from 'luxon'
 import { ValidationInput } from './ValidationInput'
 import { FormEmployee, useInputs } from '../../hooks/useInputs'
 import { useValidate } from '../../hooks/useValidate'
@@ -139,7 +140,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.salary : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -194,7 +195,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.cpf : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -205,7 +206,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.rg : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -216,7 +217,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.pis : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -227,7 +228,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.cnh : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -239,7 +240,7 @@ export function FormFuncionario({
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
                     type='date'
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.birthday : DateTime.now().toFormat('yyyy-LL-dd')}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -250,7 +251,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.email : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -261,7 +262,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.phone : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -290,7 +291,7 @@ export function FormFuncionario({
                     onchange={() => {}}
                     value
                     readonly
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.address : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -304,7 +305,7 @@ export function FormFuncionario({
                     onchange={() => {}}
                     value
                     readonly
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.city : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -318,7 +319,7 @@ export function FormFuncionario({
                     onchange={() => {}}
                     value
                     readonly
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.state : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -329,7 +330,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.number : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -340,7 +341,7 @@ export function FormFuncionario({
                     formEmployee={formEmployee}
                     setErrors={setErrors}
                     setFormEmployee={setFormEmployee}
-                    editData={data ? data.name : undefined}
+                    editData={data ? data.complement : undefined}
                   />
                 </Grid>
               </Grid>

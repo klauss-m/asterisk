@@ -60,14 +60,8 @@ export function ValidationInput({
 
   if (value) {
     props.value = formData[field]
-    if (editData) {
-      props.value = editData
-    }
   } else {
     props.defaultValue = formData[field]
-    if (editData) {
-      props.defaultValue = editData
-    }
   }
 
   if (readonly) {
@@ -77,7 +71,7 @@ export function ValidationInput({
   return (
     <>
       {field === 'address' && (
-        <Tooltip title={formData[field] || editData! || ''}>
+        <Tooltip title={formData[field]}>
           <TextField {...props} />
         </Tooltip>
       )}

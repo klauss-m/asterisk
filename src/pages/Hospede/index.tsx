@@ -37,20 +37,26 @@ export function Hospede({ window }: Props) {
       >
         <Toolbar />
         {reserva && (
-          <Card sx={{ maxWidth: '200px' }}>
+          <Card sx={{ maxWidth: '300px' }}>
             <CardHeader title='Reserva' />
             <CardContent>
               <Typography variant='h6' gutterBottom>
-                {reserva.cliente?.nome}
+                <strong>Nome:</strong> {reserva.cliente?.nome}
               </Typography>
               <Typography variant='body2' gutterBottom>
+                <strong>Data de Checkin: </strong>
                 {reserva.checkin}
               </Typography>
               <Typography variant='body2' gutterBottom>
+                <strong>Data de Checkout: </strong>
                 {reserva.checkout}
               </Typography>
               <Typography variant='body2' gutterBottom>
-                {reserva.quarto?.valor}
+                <strong>Número do Quarto: </strong>
+                {reserva.quarto?.numero}
+              </Typography>
+              <Typography variant='body2' gutterBottom>
+                <strong>Valor: </strong>R{reserva.quarto?.valor}
               </Typography>
             </CardContent>
           </Card>

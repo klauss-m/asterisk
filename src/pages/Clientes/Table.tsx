@@ -38,6 +38,7 @@ type ClientData = {
   endereco: string
   cep: string
   ultima_atualizacao: string
+  senha: string
 }
 
 const theme = createTheme()
@@ -186,7 +187,7 @@ export default function TableCliente() {
                             email: cliente.email,
                             gender: cliente.sexo === '1' ? 'M' : 'F',
                             number: tempAddress[1],
-                            password: '',
+                            password: cliente.senha,
                             phone: cliente.telefone,
                             state: cliente.estado,
                             zip: cliente.cep,
