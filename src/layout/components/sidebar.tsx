@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   AppBar,
   Box,
-  CssBaseline,
   Divider,
   IconButton,
   List,
@@ -28,7 +27,7 @@ interface Props {
 
 export default function Sidebar({ window, pageTitle }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { logoff } = useLogin()
+  const { user, logoff } = useLogin()
   const history = useHistory()
 
   const handleDrawerToggle = () => {
@@ -40,31 +39,41 @@ export default function Sidebar({ window, pageTitle }: Props) {
       <Toolbar />
       <Divider />
       <List>
-        <ListItem button onClick={() => history.push('/main/reservas')}>
-          <ListItemIcon>
-            <RoomService />
-          </ListItemIcon>
-          <ListItemText primary='Reservas' />
-        </ListItem>
-        <ListItem button onClick={() => history.push('/main/clientes')}>
-          <ListItemIcon>
-            <AccountBox />
-          </ListItemIcon>
-          <ListItemText primary='Clientes' />
-        </ListItem>
-        <ListItem button onClick={() => history.push('/main/funcionarios')}>
-          <ListItemIcon>
-            <Work />
-          </ListItemIcon>
-          <ListItemText primary='Funcionários' />
-        </ListItem>
-        <ListItem button onClick={() => history.push('/main/financeiro')}>
-          <ListItemIcon>
-            <MonetizationOn />
-          </ListItemIcon>
-          <ListItemText primary='Financeiro' />
-        </ListItem>
-        <ListItem button onClick={() => logoff()}>
+        {user?.role !== 'Hospede' && (
+          <>
+            <ListItem button onClick={() => history.push('/main/reservas')}>
+              <ListItemIcon>
+                <RoomService />
+              </ListItemIcon>
+              <ListItemText primary='Reservas' />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/main/clientes')}>
+              <ListItemIcon>
+                <AccountBox />
+              </ListItemIcon>
+              <ListItemText primary='Clientes' />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/main/funcionarios')}>
+              <ListItemIcon>
+                <Work />
+              </ListItemIcon>
+              <ListItemText primary='Funcionários' />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/main/financeiro')}>
+              <ListItemIcon>
+                <MonetizationOn />
+              </ListItemIcon>
+              <ListItemText primary='Financeiro' />
+            </ListItem>
+          </>
+        )}
+        <ListItem
+          button
+          onClick={() => {
+            logoff()
+            history.push('/login')
+          }}
+        >
           <ListItemIcon>
             <Logout />
           </ListItemIcon>
@@ -78,7 +87,6 @@ export default function Sidebar({ window, pageTitle }: Props) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <AppBar
         position='fixed'
         sx={{
@@ -116,10 +124,7 @@ export default function Sidebar({ window, pageTitle }: Props) {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-            },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
           {drawer}
@@ -128,10 +133,7 @@ export default function Sidebar({ window, pageTitle }: Props) {
           variant='permanent'
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-            },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
           open
         >

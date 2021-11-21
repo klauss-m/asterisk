@@ -1,7 +1,7 @@
 import { TextField, Tooltip } from '@mui/material'
 
 import { ValidateError } from '../../hooks/useValidate'
-import { FormData } from '../../hooks/useInputs'
+import { FormEmployee } from '../../hooks/useInputs'
 
 interface ValidationInputProps {
   field:
@@ -18,31 +18,43 @@ interface ValidationInputProps {
     | 'complement'
     | 'number'
     | 'password'
+    | 'rg'
+    | 'pis'
+    | 'cnh'
+    | 'dateAdmission'
+    | 'dateDemission'
+    | 'registerDate'
+    | 'salary'
+    | 'role'
+    | 'maritalStatus'
+    | 'active'
   fieldLabel: string
   errors: ValidateError[]
-  formData: FormData
+  formEmployee: FormEmployee
   setErrors: (errors: ValidateError[]) => void
-  setFormData: (data: string, value: string) => void
+  setFormEmployee: (data: string, value: string) => void
   type?: string
   onchange?: (arg: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void
   value?: boolean
   readonly?: boolean
+  editData?: string
 }
 
 export function ValidationInput({
   field,
   fieldLabel,
   errors,
-  formData,
+  formEmployee,
   setErrors,
-  setFormData,
+  setFormEmployee,
   type = 'text',
   onchange = (e) => {
     setErrors(errors.filter((error) => !Object.keys(error).includes(field)))
-    setFormData(field, e.target.value)
+    setFormEmployee(field, e.target.value)
   },
   value,
   readonly,
+  editData,
 }: ValidationInputProps) {
   let props: { [key: string]: any } = {
     InputLabelProps: { shrink: true },
@@ -57,9 +69,9 @@ export function ValidationInput({
   }
 
   if (value) {
-    props.value = formData[field]
+    props.value = formEmployee[field]
   } else {
-    props.defaultValue = formData[field]
+    props.defaultValue = formEmployee[field]
   }
 
   if (readonly) {
@@ -69,7 +81,7 @@ export function ValidationInput({
   return (
     <>
       {field === 'address' && (
-        <Tooltip title={formData[field]}>
+        <Tooltip title={formEmployee[field]}>
           <TextField {...props} />
         </Tooltip>
       )}

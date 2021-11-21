@@ -13,7 +13,7 @@ export function Main({ children }: MainProps) {
       <ThemeProvider theme={theme}>
         <Container>
           <Sidebar pageTitle={children?.props.pageTitle} />
-          {children || <h1>hue</h1>}
+          <div style={{ marginTop: '5rem' }}>{children || <h1>hue</h1>}</div>
         </Container>
       </ThemeProvider>
     </>

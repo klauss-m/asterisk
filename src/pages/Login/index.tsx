@@ -5,7 +5,6 @@ import {
   Button,
   Checkbox,
   createTheme,
-  CssBaseline,
   Dialog,
   DialogActions,
   DialogContent,
@@ -31,7 +30,7 @@ import { useInputs } from '../../hooks/useInputs'
 import { useLogin } from '../../hooks/useLogin'
 import { useHistory } from 'react-router-dom'
 import api from '../../services/api'
-import { User } from '../../state/app-state'
+import { User, UserRole } from '../../state/app-state'
 
 const theme = createTheme()
 
@@ -51,7 +50,7 @@ export function Login() {
           id: number
           nome: string
           email: string
-          cargo?: 'Administrador' | 'Balconista' | 'Prostituto' | 'Hospede'
+          cargo?: UserRole
         }
       } = await api.post(
         'login',
@@ -92,7 +91,6 @@ export function Login() {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
-        <CssBaseline />
         <Grid
           item
           xs={false}

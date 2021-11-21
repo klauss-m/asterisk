@@ -10,14 +10,8 @@ import img9 from '../images/img-9.jpg'
 
 const imgs = [img1, img2, img3, img4, img5, img6, img7, img8, img9]
 const paths = ['/a', '/b', '/c']
-const labels = ['Adventure', 'Mystery', 'Luxury', 'Adrenaline']
-const infos = [
-  'You are the Weakest Link. Goodbye!',
-  "Don't panic!",
-  "Here's Johnny",
-  'Schwing!',
-  'Yippee ki yay, motherfucker',
-]
+const labels = ['Aventura', 'Luxo', 'Adrenalina', 'Conforto']
+const infos = ['Quartos de luxo', 'Os melhores destinos da cidade', 'Entretenimento']
 
 export function randomCardGenerator() {
   return {

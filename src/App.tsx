@@ -9,11 +9,16 @@ import { Hospede } from './pages/Hospede'
 import { Clientes } from './pages/Clientes'
 import { Reservas } from './pages/Reservas'
 import { Funcionarios } from './pages/Funcionarios'
+import { Financeiro } from './pages/Financeiro'
 import { useLogin } from './hooks/useLogin'
+import { useEffect } from 'react'
 
 function App() {
   const { user } = useLogin()
-  console.log(user)
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   return (
     <>
@@ -38,12 +43,14 @@ function App() {
             <Signup />
           </Route>
           <Route path='/hospede'>
-            <Hospede />
+            <Main>
+              <Hospede />
+            </Main>
           </Route>
           <Route path='/main'>
             {!user && <Redirect to='/login' />}
-            <Route path='/main/'>
-              <Main />
+            <Route path='/main' exact>
+              <Redirect to='/main/reservas' />
             </Route>
             <Route path='/main/clientes'>
               <Main>
@@ -62,7 +69,7 @@ function App() {
             </Route>
             <Route path='/main/financeiro'>
               <Main>
-                <Reservas />
+                <Financeiro />
               </Main>
             </Route>
           </Route>

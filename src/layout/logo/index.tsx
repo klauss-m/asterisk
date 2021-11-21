@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
-import { CssBaseline } from '@mui/material'
 
 import logo from './logo.svg'
 
@@ -22,7 +21,6 @@ export default function Logo() {
 
   return (
     <>
-      <CssBaseline />
       <LogoStyle src={logo} width={40} onClick={() => history.push('/home')} />{' '}
     </>
   )

@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
 import React from 'react'
 import { createTheme, ThemeProvider } from '@mui/material'
-import CustomizedTables from './Table'
+import TableCliente from './Table'
 import Sidebar from '../../layout/components/sidebar'
 
 const theme = createTheme()
@@ -11,7 +11,7 @@ export function Clientes() {
     <ThemeProvider theme={theme}>
       <Container>
         <Sidebar pageTitle='Clientes' />
-        <CustomizedTables />
+        <TableCliente />
       </Container>
     </ThemeProvider>
   )

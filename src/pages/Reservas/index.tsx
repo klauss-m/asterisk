@@ -1,8 +1,6 @@
 import * as React from 'react'
 import Sidebar from '../../layout/components/sidebar'
 import { Container, createTheme, ThemeProvider } from '@mui/material'
-import api from '../../services/api'
-import axios from 'axios'
 import { MapaOcupacao } from './MapaOcupacao'
 
 const theme = createTheme()

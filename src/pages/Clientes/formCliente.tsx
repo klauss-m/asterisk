@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
 import {
   Button,
-  CssBaseline,
   Grid,
   Box,
   Container,
@@ -15,6 +14,7 @@ import {
   MenuItem,
   Dialog,
 } from '@mui/material'
+import { useHistory } from 'react-router-dom'
 import { ValidationInput } from './ValidationInput'
 import { FormData, useInputs } from '../../hooks/useInputs'
 import { useValidate } from '../../hooks/useValidate'
@@ -28,9 +28,10 @@ interface DialogClienteProps {
   onClose: () => void
   data?: FormData
   editId?: number
+  setUpdated: () => void
 }
 
-export function FormCliente({ openPopup, onClose, data, editId }: DialogClienteProps) {
+export function FormCliente({ openPopup, onClose, data, editId, setUpdated }: DialogClienteProps) {
   const [loading, setLoading] = useState(false)
   const { formData, setFormData, fetchAddress, setData } = useInputs()
   const { validate, errors, setErrors, resetErrors } = useValidate([
@@ -45,9 +46,11 @@ export function FormCliente({ openPopup, onClose, data, editId }: DialogClienteP
     'complement',
   ])
 
+  const history = useHistory()
+
   useEffect(() => {
     if (data) {
-      setData({ ...data! })
+      setData({ ...data!, gender: data.gender === '1' ? 'M' : 'F' })
     }
   }, [setData, data])
 
@@ -55,7 +58,6 @@ export function FormCliente({ openPopup, onClose, data, editId }: DialogClienteP
     <ThemeProvider theme={theme}>
       <Dialog open={openPopup} onClose={onClose}>
         <Container component='main' maxWidth='xs'>
-          <CssBaseline />
           <Box
             sx={{
               marginTop: 8,
@@ -252,17 +254,16 @@ export function FormCliente({ openPopup, onClose, data, editId }: DialogClienteP
                           cep: formData.zip,
                           senha: formData.cpf,
                         }
-                        console.log(dataToSend)
                         try {
-                          const response = await api(`cliente${data && '/' + editId}`, {
+                          const send = !data ? '' : `/${editId}`
+                          await api(`cliente${send}`, {
                             method: data ? 'PUT' : 'POST',
-                            data: dataToSend,
+                            data: { ...dataToSend, sexo: dataToSend.sexo ? 1 : 0 },
                             headers: { 'Content-Type': 'application/json' },
                           })
-                          console.log(response)
                         } catch (e) {
-                          console.log(e)
                         } finally {
+                          setUpdated()
                           onClose()
                         }
                       }
@@ -273,12 +274,15 @@ export function FormCliente({ openPopup, onClose, data, editId }: DialogClienteP
                     variant='contained'
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    {!data ? 'Registrar' : 'Editar'}
+                    {!data ? 'Registrar' : 'Salvar'}
                   </Button>
                 </Grid>
                 <Grid item>
                   <Button
-                    onClick={() => onClose()}
+                    onClick={() => {
+                      //setUpdated()
+                      onClose()
+                    }}
                     type='button'
                     color='error'
                     fullWidth

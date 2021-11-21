@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
   Table,
   TableBody,
@@ -28,7 +28,7 @@ type ClientData = {
   id: number
   nome: string
   cpf: string
-  sexo: boolean
+  sexo: string
   data_nascimento: string
   email: string
   telefone: string
@@ -41,8 +41,9 @@ type ClientData = {
 }
 
 const theme = createTheme()
+const drawerWidth = 240
 
-export default function BasicTable() {
+export default function TableCliente() {
   const [clientes, setClientes] = useState<ClientData[]>([])
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -52,31 +53,39 @@ export default function BasicTable() {
   const [editOpen, setEditOpen] = useState(false)
   const [editData, setEditData] = useState<FormData | null>(null)
   const [editId, setEditId] = useState<number | undefined>(undefined)
+  const [updated, setUpdated] = useState(false)
 
-  useEffect(() => {
-    const cancelToken = axios.CancelToken
-    const src = cancelToken.source()
+  const cancelToken = axios.CancelToken
+  const src = cancelToken.source()
 
-    async function loadClientes() {
-      try {
-        const response = await api.get('clientes', { cancelToken: src.token })
-        setIndexStart(0 + page * rowsPerPage)
-        setIndexEnd(0 + page * rowsPerPage + rowsPerPage)
-        console.log(response.data)
-        setClientes(response.data)
-      } catch (e) {
-        if (axios.isCancel(e)) {
-          console.log('cancelled')
-        } else {
-          console.error(e)
-        }
+  const loadClientes = useCallback(async () => {
+    try {
+      const response = await api.get('clientes', { cancelToken: src.token })
+      setIndexStart(0 + page * rowsPerPage)
+      setIndexEnd(0 + page * rowsPerPage + rowsPerPage)
+      setClientes(response.data)
+    } catch (e) {
+      if (axios.isCancel(e)) {
+        console.log('cancelled')
+      } else {
+        console.error(e)
       }
     }
+  }, [page, rowsPerPage, src])
 
+  useEffect(() => {
     loadClientes()
-
     return () => src.cancel('cancel')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage])
+
+  useEffect(() => {
+    if (updated) {
+      loadClientes()
+      setUpdated(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updated])
 
   const handleChangePage = (event: unknown, page: number) => {
     setPage(page)
@@ -86,14 +95,6 @@ export default function BasicTable() {
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
   const tableCellStyle = {
     fontWeight: 'bold',
     backgroundColor: theme.palette.primary.dark,
@@ -102,105 +103,127 @@ export default function BasicTable() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ marginTop: '80px', position: 'absolute', right: '40px' }}>
-        <Button variant='contained' onClick={handleClickOpen}>
-          Novo Cliente
-        </Button>
-        <FormCliente openPopup={open} onClose={handleClose} />
-      </Box>
-      <TableContainer component={Paper} sx={{ margin: '80px 10px' }}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={tableCellStyle}>Nome</TableCell>
-              <TableCell sx={tableCellStyle}>E-mail</TableCell>
-              <TableCell sx={tableCellStyle}>Última Atualização</TableCell>
-              <TableCell sx={tableCellStyle}></TableCell>
-              <TableCell sx={tableCellStyle}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clientes.slice(indexStart, indexEnd).map((cliente) => (
-              <TableRow key={cliente.id}>
-                <TableCell>
-                  <Grid container>
-                    <Grid item lg={2}>
-                      <Avatar
-                        alt={cliente.nome}
-                        src='.'
-                        sx={{
-                          backgroundColor: theme.palette.primary.light,
-                          color: theme.palette.getContrastText(theme.palette.primary.light),
-                        }}
-                      />
-                    </Grid>
-                    <Grid item lg={10}>
-                      <Typography
-                        sx={{
-                          fontWeight: 'bold',
-                          color: theme.palette.primary.dark,
+      <Box sx={{ display: 'flex' }}>
+        <Box
+          component='main'
+          sx={{
+            flexGrow: 1,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px`, xl: 0 },
+          }}
+        >
+          <Button variant='contained' onClick={() => setOpen(true)} sx={{ mb: 1 }}>
+            Novo Cliente
+          </Button>
+
+          <FormCliente
+            openPopup={open}
+            onClose={() => setOpen(false)}
+            setUpdated={() => setUpdated(true)}
+          />
+
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: '1000px',
+            }}
+          >
+            <Table aria-label='simple table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={tableCellStyle}>Nome</TableCell>
+                  <TableCell sx={tableCellStyle}>E-mail</TableCell>
+                  <TableCell sx={tableCellStyle}>Última Atualização</TableCell>
+                  <TableCell sx={tableCellStyle}></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {clientes.slice(indexStart, indexEnd).map((cliente) => (
+                  <TableRow key={cliente.id}>
+                    <TableCell>
+                      <Grid container>
+                        <Grid item lg={2}>
+                          <Avatar
+                            alt={cliente.nome}
+                            src='.'
+                            sx={{
+                              backgroundColor: theme.palette.primary.light,
+                              color: theme.palette.getContrastText(theme.palette.primary.light),
+                              marginRight: 5,
+                            }}
+                          />
+                        </Grid>
+                        <Grid item lg={10}>
+                          <Typography
+                            sx={{
+                              fontWeight: 'bold',
+                              color: theme.palette.primary.dark,
+                            }}
+                          >
+                            {cliente.nome}
+                          </Typography>{' '}
+                          <Typography>ID: {cliente.id}</Typography>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{cliente.email}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      {DateTime.fromISO(cliente.ultima_atualizacao!).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => {
+                          const tempAddress = cliente.endereco.split(' - ')
+                          setEditData({
+                            name: cliente.nome,
+                            address: `${tempAddress[0]} - ${tempAddress[3]}`,
+                            birthday: cliente.data_nascimento,
+                            city: cliente.cidade,
+                            complement: tempAddress[2],
+                            cpf: cliente.cpf,
+                            email: cliente.email,
+                            gender: cliente.sexo === '1' ? 'M' : 'F',
+                            number: tempAddress[1],
+                            password: '',
+                            phone: cliente.telefone,
+                            state: cliente.estado,
+                            zip: cliente.cep,
+                          })
+                          setEditId(cliente.id)
+                          setEditOpen(true)
                         }}
                       >
-                        {cliente.nome}
-                      </Typography>{' '}
-                      <Typography>ID: {cliente.id}</Typography>
-                    </Grid>
-                  </Grid>
-                </TableCell>
-                <TableCell>
-                  <Typography>{cliente.email}</Typography>
-                </TableCell>
-                <TableCell>
-                  {DateTime.fromISO(cliente.ultima_atualizacao!).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    onClick={() => {
-                      console.log(cliente)
-                      const tempAddress = cliente.endereco.split(' - ')
-                      setEditData({
-                        name: cliente.nome,
-                        address: `${tempAddress[0]} - ${tempAddress[3]}`,
-                        birthday: cliente.data_nascimento,
-                        city: cliente.cidade,
-                        complement: tempAddress[2],
-                        cpf: cliente.cpf,
-                        email: cliente.email,
-                        gender: cliente.sexo ? 'M' : 'F',
-                        number: tempAddress[1],
-                        password: '',
-                        phone: cliente.telefone,
-                        state: cliente.estado,
-                        zip: cliente.cep,
-                      })
-                      setEditId(cliente.id)
-                      setEditOpen(true)
-                    }}
-                  >
-                    <EditIcon />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter></TableFooter>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component='div'
-          count={clientes.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
-      <FormCliente
-        data={editData as FormData}
-        editId={editId}
-        openPopup={editOpen}
-        onClose={() => setEditOpen(false)}
-      />
+                        <EditIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter></TableFooter>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 15]}
+              component='div'
+              count={clientes.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
+          <FormCliente
+            data={editData as FormData}
+            editId={editId}
+            openPopup={editOpen}
+            setUpdated={() => setUpdated(true)}
+            onClose={() => {
+              setEditOpen(false)
+            }}
+          />
+        </Box>
+      </Box>
     </ThemeProvider>
   )
 }

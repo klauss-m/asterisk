@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Avatar,
   Button,
-  CssBaseline,
   FormControlLabel,
   Checkbox,
   Link,
@@ -31,6 +30,7 @@ const theme = createTheme()
 
 export function Signup() {
   const [loading, setLoading] = useState(false)
+  const [checked, setChecked] = useState(false)
   const { formData, setFormData, fetchAddress } = useInputs()
   const { validate, errors, setErrors, resetErrors } = useValidate([
     'name',
@@ -48,10 +48,14 @@ export function Signup() {
   const [lgpdOpen, setLgpdOpen] = useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.checked)
+    setChecked(event.target.checked)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container component='main' maxWidth='xs'>
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -223,7 +227,14 @@ export function Signup() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value='terms' color='primary' />}
+                  control={
+                    <Checkbox
+                      value='terms'
+                      color='primary'
+                      checked={checked}
+                      onChange={handleChange}
+                    />
+                  }
                   label={
                     <>
                       Concordo com{' '}
@@ -245,9 +256,8 @@ export function Signup() {
                 setLoading(true)
                 resetErrors()
                 const validationErrors = validate(formData)
-                console.log(validationErrors)
                 setErrors(validationErrors)
-                if (validationErrors.length === 0) {
+                if (validationErrors.length === 0 && checked) {
                   const data = {
                     nome: formData.name,
                     cpf: formData.cpf,
@@ -263,10 +273,9 @@ export function Signup() {
                     senha: formData.password,
                   }
                   try {
-                    const response = await api.post('cliente', data, {
+                    await api.post('cliente', data, {
                       headers: { 'Content-Type': 'application/json' },
                     })
-                    console.log(response)
                   } catch (e) {
                     console.log(e)
                   }
