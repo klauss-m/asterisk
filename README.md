@@ -18,5 +18,5 @@ Foram utilizadas as seguintes ferramentas neste projeto:
 # Status do Projeto
 
 <h4 align="center"> 
-	🚧  Em desenvolvimento.  🚧
+	✔️  Finalizado.  ✔️
 </h4>
